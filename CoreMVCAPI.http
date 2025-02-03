@@ -3,7 +3,7 @@
 GET {{CoreMVCAPI_HostAddress}}/weatherforecast/
 Accept: application/json
 
-GET {{CoreMVCAPI_HostAddress}}/api/Staff/
+GET {{CoreMVCAPI_HostAddress}}/api
 Accept: application/json
 
 ###

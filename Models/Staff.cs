@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CoreMVCAPI.Models
 {
@@ -13,6 +14,7 @@ namespace CoreMVCAPI.Models
 		public string Position { get; set; } = string.Empty; // 職位
 
 		[Range(0, double.MaxValue, ErrorMessage = "薪資必須為正數")]
-		public decimal Salary { get; set; } // 薪資
+        [Column(TypeName = "decimal(18,2)")] // 指定 SQL Server 列類型
+        public decimal Salary { get; set; } // 薪資
 	}
 }

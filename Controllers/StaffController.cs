@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using CoreMVCAPI.Data;
 using CoreMVCAPI.Models;
 using System.Linq;
@@ -7,7 +9,8 @@ namespace CoreMVCAPI.Controllers
 {
 	[ApiController]
 	[Route("api/[controller]")]
-	public class StaffController : ControllerBase
+    [Authorize] // 這裡加上 JWT 驗證
+    public class StaffController : ControllerBase
 	{
 		private readonly ApplicationDbContext _context;
 
@@ -15,13 +18,15 @@ namespace CoreMVCAPI.Controllers
 		{
 			_context = context;
 		}
+		
 
 		// 1. 獲取所有 Staff
-		[HttpGet]
+		[HttpGet()]
 		public IActionResult GetAll()
 		{
 			var staffs = _context.Staffs.ToList();
-			return Ok(staffs);
+           // return Ok(new { message = "Access granted to Staff data!" });
+            return Ok(staffs);
 		}
 
 		// 2. 根據 ID 獲取單個 Staff

@@ -1,5 +1,21 @@
 [
   {
+    "ContainingType": "CoreMVCAPI.Controllers.AuthController",
+    "Method": "Login",
+    "RelativePath": "api/Auth/login",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "model",
+        "Type": "CoreMVCAPI.Controllers.LoginModel",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "CoreMVCAPI.Controllers.StaffController",
     "Method": "GetAll",
     "RelativePath": "api/Staff",
