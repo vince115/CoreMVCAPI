@@ -16,5 +16,8 @@ namespace CoreMVCAPI.Models
 		[Range(0, double.MaxValue, ErrorMessage = "薪資必須為正數")]
         [Column(TypeName = "decimal(18,2)")] // 指定 SQL Server 列類型
         public decimal Salary { get; set; } // 薪資
-	}
+
+        public string SystemAccount { get; set; } = string.Empty;
+        public string? Pwd { get; set; }
+    }
 }

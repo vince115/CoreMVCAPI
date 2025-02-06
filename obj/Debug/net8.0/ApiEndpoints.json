@@ -9,7 +9,7 @@
     "Parameters": [
       {
         "Name": "model",
-        "Type": "CoreMVCAPI.Controllers.LoginModel",
+        "Type": "CoreMVCAPI.Models.LoginModel",
         "IsRequired": true
       }
     ],

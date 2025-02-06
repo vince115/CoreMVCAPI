@@ -206,11 +206,11 @@
       "LoginModel": {
         "type": "object",
         "properties": {
-          "username": {
+          "systemAccount": {
             "type": "string",
             "nullable": true
           },
-          "password": {
+          "pwd": {
             "type": "string",
             "nullable": true
           }
@@ -240,6 +240,14 @@
             "minimum": 0,
             "type": "number",
             "format": "double"
+          },
+          "systemAccount": {
+            "type": "string",
+            "nullable": true
+          },
+          "pwd": {
+            "type": "string",
+            "nullable": true
           }
         },
         "additionalProperties": false
