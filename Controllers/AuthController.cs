@@ -1,5 +1,6 @@
 ﻿using CoreMVCAPI.Data;
 using CoreMVCAPI.Models; // 引入 LoginModel 所在的命名空間
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -7,7 +8,6 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
-
 
 namespace CoreMVCAPI.Controllers
 {
@@ -77,7 +77,51 @@ namespace CoreMVCAPI.Controllers
             //return Unauthorized("帳號或密碼錯誤");
         }
 
-      
+        /// <summary>
+        /// 獲取當前使用者資訊
+        /// </summary>
+        [HttpGet("me")]
+        [Authorize] // 需要 JWT Token
+        public IActionResult Me()
+        {
+            var user = HttpContext.User;
+
+            if (user.Identity is not { IsAuthenticated: true })
+            {
+                return Unauthorized(new { message = "未授權" });
+            }
+
+            var userId = user.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+            var username = user.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
+            var email = user.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
+            var role = user.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value;
+
+            return Ok(new
+            {
+                Id = userId,
+                Username = username,
+                Email = email,
+                Role = role
+            });
+        }
+
+        //刷新 JWT Token (/api/Auth/refresh)
+        [HttpPost("refresh")]
+        [Authorize]
+        public IActionResult RefreshToken()
+        {
+            var user = HttpContext.User;
+            var username = user.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
+            if (username == null)
+            {
+                return Unauthorized("無法驗證使用者");
+            }
+
+            var newToken = GenerateJwtToken(username);
+            return Ok(new { token = newToken });
+        }
+
+
         /// 使用官方 MD5 計算雜湊值
         private static string ComputeMd5Hash(string input)
         {
@@ -95,7 +139,6 @@ namespace CoreMVCAPI.Controllers
                 return sb.ToString();
             }
         }
-
 
         private string GenerateJwtToken(string username)
         {
