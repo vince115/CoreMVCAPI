@@ -81,7 +81,7 @@ namespace CoreMVCAPI.Controllers
         /// 獲取當前使用者資訊
         /// </summary>
         [HttpGet("me")]
-        [Authorize] // 需要 JWT Token
+        [Authorize] // Requires JWT Token
         public IActionResult Me()
         {
             var user = HttpContext.User;
@@ -91,17 +91,36 @@ namespace CoreMVCAPI.Controllers
                 return Unauthorized(new { message = "未授權" });
             }
 
-            var userId = user.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
             var username = user.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
-            var email = user.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
-            var role = user.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value;
+
+            if (string.IsNullOrEmpty(username))
+            {
+                return Unauthorized(new { message = "使用者名稱無效" });
+            }
+
+            // Fetch the user details from the database
+            var staff = _context.Staffs
+                                .Where(s => s.SystemAccount == username)
+                                .Select(s => new
+                                {
+                                    Id = s.Id,
+                                    SystemAccount = s.SystemAccount,
+                                    Name = s.Name,  // Assuming `Email` exists in `Staffs`
+                                    Position = s.Position  // Mapping role to position
+                                })
+                                .FirstOrDefault();
+
+            if (staff == null)
+            {
+                return NotFound(new { message = "使用者資料不存在" });
+            }
 
             return Ok(new
             {
-                Id = userId,
-                Username = username,
-                Email = email,
-                Role = role
+                Id = staff.Id,
+                SystemAccount = staff.SystemAccount,
+                Name = staff.Name,
+                Position = staff.Position
             });
         }
 

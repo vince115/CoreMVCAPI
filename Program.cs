@@ -43,16 +43,25 @@ builder.Services.AddAuthentication(options =>
 });
 
 // 設定 CORS
+//builder.Services.AddCors(options =>
+//{
+//    options.AddPolicy("AllowAll", policy =>
+//    {
+//        policy.AllowAnyOrigin()
+//              .AllowAnyMethod()
+//              .AllowAnyHeader();
+//    });
+//});
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll", policy =>
     {
-        policy.AllowAnyOrigin()
+        policy.WithOrigins("http://localhost:3000") // 指定前端的域名
               .AllowAnyMethod()
-              .AllowAnyHeader();
+              .AllowAnyHeader()
+              .AllowCredentials(); // ✅ 允許帶憑證 (必要)
     });
 });
-
 
 // Add services to the container.
 builder.Services.AddAuthorization();
