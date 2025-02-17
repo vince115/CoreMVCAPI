@@ -141,6 +141,27 @@ namespace CoreMVCAPI.Controllers
         }
 
 
+        [HttpPost("logout")]
+        [Authorize]
+        public IActionResult Logout()
+        {
+            var user = HttpContext.User;
+
+            // 檢查請求是否包含身份驗證資訊
+            if (user?.Identity == null || !user.Identity.IsAuthenticated)
+            {
+                return Unauthorized(new { message = "未授權，請提供有效的 Token" });
+            }
+
+            // 這裡可以選擇將 Token 加入黑名單，防止重複使用
+            // _context.InvalidTokens.Add(new InvalidToken { Token = currentToken, Expiry = tokenExpiry });
+            // _context.SaveChanges();
+
+            return Ok(new { message = "登出成功" });
+        }
+
+
+
         /// 使用官方 MD5 計算雜湊值
         private static string ComputeMd5Hash(string input)
         {
@@ -190,9 +211,4 @@ namespace CoreMVCAPI.Controllers
         }
     }
 
-    //public class LoginModel
-    //{
-    //    public string? Username { get; set; }
-    //    public string? Password { get; set; }
-    //}
 }
