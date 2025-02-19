@@ -53,28 +53,21 @@ namespace CoreMVCAPI.Controllers
             {
                 return Unauthorized("帳號或密碼錯誤");
             }
-            else
-            {
-                // 通過驗證
-                var token = GenerateJwtToken(staff.SystemAccount);
-                return Ok(new { token });
-            }
 
+           
+           // 通過驗證
+            // ✅ 產生 accessToken 和 refreshToken
+            var newAccessToken = GenerateJwtToken(staff.SystemAccount, "access");
+            var newRefreshToken = GenerateJwtToken(staff.SystemAccount, "refresh"); // 這裡生成 refreshToken
 
-            //if (staff.Pwd != model.Pwd)
-            //{
-            //    return Unauthorized("帳號或密碼錯誤");
-            //}
+            // ✅ 將 refreshToken 存入資料庫（可選，但推薦這樣做）
+            //DB.RefreshToken = newRefreshToken;
+            //DB.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(7); // 7天後過期
+            //_context.SaveChanges();
 
-            //var token = GenerateJwtToken(staff.SystemAccount);
-            //return Ok(new { token });
+            // ✅ 回傳 accessToken 和 refreshToken
+            return Ok(new { token = newAccessToken, refreshToken = newRefreshToken });
 
-            //if (model.Username == "admin" && model.Password == "123456")
-            //{
-            //    var token = GenerateJwtToken(model.Username);
-            //    return Ok(new { token });
-            //}
-            //return Unauthorized("帳號或密碼錯誤");
         }
 
         /// <summary>
@@ -136,8 +129,14 @@ namespace CoreMVCAPI.Controllers
                 return Unauthorized("無法驗證使用者");
             }
 
-            var newToken = GenerateJwtToken(username);
-            return Ok(new { token = newToken });
+            //var newToken = GenerateJwtToken(username);
+            //var newRefreshToken = GenerateToken(username); // 生成新的 refreshToken
+
+            var newAccessToken = GenerateJwtToken(username, "access");
+            var newRefreshToken = GenerateJwtToken(username, "refresh");
+
+            //return Ok(new { token = newToken });
+            return Ok(new { token = newAccessToken, refreshToken = newRefreshToken });
         }
 
 
@@ -180,7 +179,7 @@ namespace CoreMVCAPI.Controllers
             }
         }
 
-        private string GenerateJwtToken(string username)
+        private string GenerateJwtToken(string username, string tokenType)
         {
             var jwtSettings = _configuration.GetSection("JwtSettings");
             string secretKeyString = jwtSettings.GetValue<string>("SecretKey") ?? string.Empty;
@@ -194,17 +193,31 @@ namespace CoreMVCAPI.Controllers
             var key = new SymmetricSecurityKey(secretKey);
             var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
+
+            // 設定不同的過期時間
+            int expirationMinutes = tokenType == "access"
+                ? Convert.ToInt32(jwtSettings["AccessExpirationMinutes"])   // accessToken 短效期
+                : Convert.ToInt32(jwtSettings["RefreshExpirationDays"]) * 1440; // refreshToken 長效期（天轉換成分鐘）
+
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Name, username),
-                new Claim(ClaimTypes.Role, "Admin") // 這裡可以加入角色
+                new Claim("tokenType", tokenType) // 用來區分是 accessToken 或 refreshToken
+                //new Claim(ClaimTypes.Role, "Admin") // 這裡可以加入角色
             };
+
+            // `accessToken` 可以攜帶角色權限
+            if (tokenType == "access")
+            {
+                claims.Add(new Claim(ClaimTypes.Role, "Admin")); // 這裡可以改成從資料庫取用戶角色
+            }
 
             var token = new JwtSecurityToken(
                 issuer: jwtSettings["Issuer"],
                 audience: jwtSettings["Audience"],
                 claims: claims,
-                expires: DateTime.UtcNow.AddMinutes(Convert.ToDouble(jwtSettings["ExpirationMinutes"])),
+                //expires: DateTime.UtcNow.AddMinutes(Convert.ToDouble(jwtSettings["ExpirationMinutes"])),
+                expires: DateTime.UtcNow.AddMinutes(expirationMinutes),
                 signingCredentials: credentials);
 
             return new JwtSecurityTokenHandler().WriteToken(token);
