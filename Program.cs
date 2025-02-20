@@ -43,15 +43,6 @@ builder.Services.AddAuthentication(options =>
 });
 
 // 設定 CORS
-//builder.Services.AddCors(options =>
-//{
-//    options.AddPolicy("AllowAll", policy =>
-//    {
-//        policy.AllowAnyOrigin()
-//              .AllowAnyMethod()
-//              .AllowAnyHeader();
-//    });
-//});
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll", policy =>
@@ -62,6 +53,14 @@ builder.Services.AddCors(options =>
               .AllowCredentials(); // ✅ 允許帶憑證 (必要)
     });
 });
+
+//強制API路由統一大小寫
+builder.Services.AddRouting(options =>
+{
+    options.LowercaseUrls = true; // ✅ 讓 API 路由強制小寫
+});
+
+
 
 // Add services to the container.
 builder.Services.AddAuthorization();

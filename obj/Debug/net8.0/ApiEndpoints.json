@@ -2,7 +2,7 @@
   {
     "ContainingType": "CoreMVCAPI.Controllers.AuthController",
     "Method": "Login",
-    "RelativePath": "api/Auth/login",
+    "RelativePath": "api/auth/login",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
@@ -18,7 +18,7 @@
   {
     "ContainingType": "CoreMVCAPI.Controllers.AuthController",
     "Method": "Logout",
-    "RelativePath": "api/Auth/logout",
+    "RelativePath": "api/auth/logout",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
@@ -28,7 +28,7 @@
   {
     "ContainingType": "CoreMVCAPI.Controllers.AuthController",
     "Method": "Me",
-    "RelativePath": "api/Auth/me",
+    "RelativePath": "api/auth/me",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -38,7 +38,7 @@
   {
     "ContainingType": "CoreMVCAPI.Controllers.AuthController",
     "Method": "RefreshToken",
-    "RelativePath": "api/Auth/refresh",
+    "RelativePath": "api/auth/refresh",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
@@ -48,7 +48,7 @@
   {
     "ContainingType": "CoreMVCAPI.Controllers.StaffController",
     "Method": "GetAll",
-    "RelativePath": "api/Staff",
+    "RelativePath": "api/staff",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -58,7 +58,7 @@
   {
     "ContainingType": "CoreMVCAPI.Controllers.StaffController",
     "Method": "Create",
-    "RelativePath": "api/Staff",
+    "RelativePath": "api/staff",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
@@ -74,7 +74,7 @@
   {
     "ContainingType": "CoreMVCAPI.Controllers.StaffController",
     "Method": "GetById",
-    "RelativePath": "api/Staff/{id}",
+    "RelativePath": "api/staff/{id}",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -90,7 +90,7 @@
   {
     "ContainingType": "CoreMVCAPI.Controllers.StaffController",
     "Method": "Update",
-    "RelativePath": "api/Staff/{id}",
+    "RelativePath": "api/staff/{id}",
     "HttpMethod": "PUT",
     "IsController": true,
     "Order": 0,
@@ -111,7 +111,86 @@
   {
     "ContainingType": "CoreMVCAPI.Controllers.StaffController",
     "Method": "Delete",
-    "RelativePath": "api/Staff/{id}",
+    "RelativePath": "api/staff/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "CoreMVCAPI.Controllers.UserController",
+    "Method": "GetAll",
+    "RelativePath": "api/user",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "CoreMVCAPI.Controllers.UserController",
+    "Method": "Create",
+    "RelativePath": "api/user",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "user",
+        "Type": "CoreMVCAPI.Models.User",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "CoreMVCAPI.Controllers.UserController",
+    "Method": "GetById",
+    "RelativePath": "api/user/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "CoreMVCAPI.Controllers.UserController",
+    "Method": "Update",
+    "RelativePath": "api/user/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "user",
+        "Type": "CoreMVCAPI.Models.User",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "CoreMVCAPI.Controllers.UserController",
+    "Method": "Delete",
+    "RelativePath": "api/user/{id}",
     "HttpMethod": "DELETE",
     "IsController": true,
     "Order": 0,
@@ -127,7 +206,7 @@
   {
     "ContainingType": "CoreMVCAPI.Controllers.WeatherForecastController",
     "Method": "Get",
-    "RelativePath": "WeatherForecast",
+    "RelativePath": "weatherforecast",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,

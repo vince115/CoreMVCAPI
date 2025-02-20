@@ -37,9 +37,9 @@ namespace CoreMVCAPI.Controllers
             }
 
             // 假設這裡是驗證邏輯，實際上應該連接資料庫驗證
-            var staff = _context.Staffs.SingleOrDefault(s => s.SystemAccount == model.SystemAccount);
+            var user = _context.User.SingleOrDefault(s => s.SystemAccount == model.SystemAccount);
 
-            if (staff == null)
+            if (user == null)
             {
                 return Unauthorized("帳號或密碼錯誤");
             }
@@ -48,8 +48,8 @@ namespace CoreMVCAPI.Controllers
             var hashedInputPwd = ComputeMd5Hash(model.Pwd);
 
 
-            // 如果有加密，請先解密 staff.Pwd
-            if (staff.Pwd != hashedInputPwd)
+            // 如果有加密，請先解密 User.Pwd
+            if (user.Pwd != hashedInputPwd)
             {
                 return Unauthorized("帳號或密碼錯誤");
             }
@@ -57,8 +57,8 @@ namespace CoreMVCAPI.Controllers
            
            // 通過驗證
             // ✅ 產生 accessToken 和 refreshToken
-            var newAccessToken = GenerateJwtToken(staff.SystemAccount, "access");
-            var newRefreshToken = GenerateJwtToken(staff.SystemAccount, "refresh"); // 這裡生成 refreshToken
+            var newAccessToken = GenerateJwtToken(user.SystemAccount, "access");
+            var newRefreshToken = GenerateJwtToken(user.SystemAccount, "refresh"); // 這裡生成 refreshToken
 
             // ✅ 將 refreshToken 存入資料庫（可選，但推薦這樣做）
             //DB.RefreshToken = newRefreshToken;
@@ -77,14 +77,14 @@ namespace CoreMVCAPI.Controllers
         [Authorize] // Requires JWT Token
         public IActionResult Me()
         {
-            var user = HttpContext.User;
+            var me = HttpContext.User;
 
-            if (user.Identity is not { IsAuthenticated: true })
+            if (me.Identity is not { IsAuthenticated: true })
             {
                 return Unauthorized(new { message = "未授權" });
             }
 
-            var username = user.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
+            var username = me.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
 
             if (string.IsNullOrEmpty(username))
             {
@@ -92,7 +92,7 @@ namespace CoreMVCAPI.Controllers
             }
 
             // Fetch the user details from the database
-            var staff = _context.Staffs
+            var user = _context.User
                                 .Where(s => s.SystemAccount == username)
                                 .Select(s => new
                                 {
@@ -103,17 +103,17 @@ namespace CoreMVCAPI.Controllers
                                 })
                                 .FirstOrDefault();
 
-            if (staff == null)
+            if (user == null)
             {
                 return NotFound(new { message = "使用者資料不存在" });
             }
 
             return Ok(new
             {
-                Id = staff.Id,
-                SystemAccount = staff.SystemAccount,
-                Name = staff.Name,
-                Position = staff.Position
+                Id = user.Id,
+                SystemAccount = user.SystemAccount,
+                Name = user.Name,
+                Position = user.Position
             });
         }
 
