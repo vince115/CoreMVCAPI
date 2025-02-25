@@ -24,7 +24,7 @@ namespace CoreMVCAPI.Models
 
         public int? QuarCategory { get; set; }
 
-        public int? MangerAddTo { get; set; }
+        public int? ManagerAddTo { get; set; }
 
         public int? DeputyManager1 { get; set; }
 

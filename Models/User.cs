@@ -6,7 +6,7 @@ namespace CoreMVCAPI.Models
 {
     public class User
     {
-        public int Id { get; set; } // 員工 ID
+        public int ID { get; set; } // 員工 ID
 
         [Required(ErrorMessage = "姓名是必填項")]
         public string Name { get; set; } = string.Empty; // 員工姓名

@@ -16,42 +16,6 @@ namespace CoreMVCAPI.Controllers
 		{
 			dbo = context;
 		}
-		
-
-		// 1. 獲取所有 Staff
-		//[HttpGet()]
-		//public IActionResult GetAll()
-		//{
-
-  //          try
-  //          {
-  //              var staffs = _context.Staff
-		//			.Select(s => new
-		//			{
-		//				Id = s.Id,
-  //                      PositionID = s.PositionID,
-  //                      DepID = s.DepID,
-  //                      ADAccount = s.ADAccount ?? "未知",
-		//				Name = s.Name ?? "未知",
-		//				PositionName = s.PositionName ?? "未知",
-  //                      TakeOfficeDate = s.TakeOfficeDate.HasValue ? s.TakeOfficeDate.Value.ToString("yyyy-MM-dd") : null, // ✅ 正確轉換為 `string`
-  //                      SystemAccount = s.SystemAccount ?? "未知",
-  //                      Phone1 = s.Phone1 ?? "未知",
-		//				Phone2 = s.Phone2 ?? "未知",
-		//				PhoneExt = s.PhoneExt ?? "未知",
-  //                      Birthday = s.Birthday.HasValue ? s.Birthday.Value.ToString("yyyy-MM-dd") : null // ✅ 正確轉換為 `string`
-                        
-		//			})
-		//			.OrderBy(s=>s.ADAccount)
-		//			.ToList();
-
-		//		return Ok(staffs);
-		//		}
-  //          catch (Exception ex)
-  //          {
-  //              return StatusCode(500, new { message = "發生錯誤", error = ex.Message });
-  //          }
-  //      }
 
 
         [HttpGet()]
@@ -63,13 +27,13 @@ namespace CoreMVCAPI.Controllers
                     from s in dbo.Staff
                     join st in dbo.SiteInfo on s.SiteID equals st.ID into sts
                     from st in sts.DefaultIfEmpty()
-                    join d in dbo.JobDeputy on s.Id equals d.StaffID into ds
+                    join d in dbo.JobDeputy on s.ID equals d.StaffID into ds
                     from d in ds.DefaultIfEmpty()
                     join dept in dbo.DepartmentInfo on s.DepID equals dept.DepID into depts
                     from dept in depts.DefaultIfEmpty()
-                    join s1 in dbo.Staff on d.FirstDeputy equals s1.Id into s1s
+                    join s1 in dbo.Staff on d.FirstDeputy equals s1.ID into s1s
                     from s1 in s1s.DefaultIfEmpty()
-                    join s2 in dbo.Staff on d.SecondDeputy equals s2.Id into s2s
+                    join s2 in dbo.Staff on d.SecondDeputy equals s2.ID into s2s
                     from s2 in s2s.DefaultIfEmpty()
                     join Si in dbo.SiteInfo on s.SiteID equals Si.ID into Ssi
                     from Si in Ssi.DefaultIfEmpty()
@@ -77,7 +41,10 @@ namespace CoreMVCAPI.Controllers
                     from pg in pgs.DefaultIfEmpty()
                     select new
                     {
-                        Id = s.Id,
+                        Id = s.ID,
+                        SiteID = s.SiteID ?? null,
+                        positionID = s.PositionID ?? null,
+                        DepID = s.DepID ?? null,
                         Name = s.Name ?? "未知",
                         //TakeOfficeDate = s.TakeOfficeDate.HasValue ? s.TakeOfficeDate.Value.ToString("yyyy-MM-dd") : null,
                         SystemAccount = s.SystemAccount ?? "未知",
@@ -123,7 +90,7 @@ namespace CoreMVCAPI.Controllers
         [HttpGet("{id}")]
 		public IActionResult GetById(int id)
 		{
-			var staff = dbo.Staff.FirstOrDefault(s => s.Id == id);
+			var staff = dbo.Staff.FirstOrDefault(s => s.ID == id);
 			if (staff == null) return NotFound();
 			return Ok(staff);
 		}
@@ -134,14 +101,14 @@ namespace CoreMVCAPI.Controllers
 		{
 			dbo.Staff.Add(staff);
 			dbo.SaveChanges();
-			return CreatedAtAction(nameof(GetById), new { id = staff.Id }, staff);
+			return CreatedAtAction(nameof(GetById), new { id = staff.ID }, staff);
 		}
 
 		// 4. 更新 Staff
 		[HttpPut("{id}")]
 		public IActionResult Update(int id, Staff staff)
 		{
-			var existingStaff = dbo.Staff.FirstOrDefault(s => s.Id == id);
+			var existingStaff = dbo.Staff.FirstOrDefault(s => s.ID == id);
 			if (existingStaff == null) return NotFound();
             		
 			existingStaff.ADAccount = staff.ADAccount;
@@ -162,7 +129,7 @@ namespace CoreMVCAPI.Controllers
 		[HttpDelete("{id}")]
 		public IActionResult Delete(int id)
 		{
-			var staff = dbo.Staff.FirstOrDefault(s => s.Id == id);
+			var staff = dbo.Staff.FirstOrDefault(s => s.ID == id);
 			if (staff == null) return NotFound();
 
 			dbo.Staff.Remove(staff);

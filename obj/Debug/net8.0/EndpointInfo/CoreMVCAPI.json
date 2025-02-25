@@ -72,6 +72,256 @@
         }
       }
     },
+    "/api/departmentinfo": {
+      "get": {
+        "tags": [
+          "DepartmentInfo"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "DepartmentInfo"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DepartmentInfo"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DepartmentInfo"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/DepartmentInfo"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/departmentinfo/{id}": {
+      "get": {
+        "tags": [
+          "DepartmentInfo"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "DepartmentInfo"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DepartmentInfo"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DepartmentInfo"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/DepartmentInfo"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "DepartmentInfo"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/siteinfo": {
+      "get": {
+        "tags": [
+          "SiteInfo"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "SiteInfo"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SiteInfo"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SiteInfo"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/SiteInfo"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/siteinfo/{id}": {
+      "get": {
+        "tags": [
+          "SiteInfo"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "SiteInfo"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SiteInfo"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SiteInfo"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/SiteInfo"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "SiteInfo"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/staff": {
       "get": {
         "tags": [
@@ -238,14 +488,14 @@
         }
       }
     },
-    "/api/user/{id}": {
+    "/api/user/{ID}": {
       "get": {
         "tags": [
           "User"
         ],
         "parameters": [
           {
-            "name": "id",
+            "name": "ID",
             "in": "path",
             "required": true,
             "schema": {
@@ -266,7 +516,7 @@
         ],
         "parameters": [
           {
-            "name": "id",
+            "name": "ID",
             "in": "path",
             "required": true,
             "schema": {
@@ -306,7 +556,7 @@
         ],
         "parameters": [
           {
-            "name": "id",
+            "name": "ID",
             "in": "path",
             "required": true,
             "schema": {
@@ -364,6 +614,83 @@
   },
   "components": {
     "schemas": {
+      "DepartmentInfo": {
+        "required": [
+          "deptName"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "siteID": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "deptName": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string"
+          },
+          "manager": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "depID": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "sealImage": {
+            "type": "string",
+            "nullable": true
+          },
+          "isProxy": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "quarCategory": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "managerAddTo": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "deputyManager1": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "deputyManager2": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "deputyManager3": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "isActive": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "isOmniscient": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "deptType": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "LoginModel": {
         "type": "object",
         "properties": {
@@ -373,6 +700,138 @@
           },
           "pwd": {
             "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "SiteInfo": {
+        "required": [
+          "siteName"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "siteName": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string"
+          },
+          "companyName": {
+            "maxLength": 255,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "siteAddr": {
+            "maxLength": 255,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "taxID": {
+            "maxLength": 20,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "phone": {
+            "maxLength": 255,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "fax": {
+            "maxLength": 255,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "email": {
+            "maxLength": 255,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "manager": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "sealImage": {
+            "type": "string",
+            "nullable": true
+          },
+          "accountant": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "projectColor": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "displayOrder": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "isActive": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "annualType": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "calendarID": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "hrStaff": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "businessAuditor": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "siteCurrency": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "isOmniscient": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "isHeadQuarters": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "serviceFeePercentage": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "accountant2": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "accountant3": {
+            "type": "integer",
+            "format": "int32",
             "nullable": true
           }
         },

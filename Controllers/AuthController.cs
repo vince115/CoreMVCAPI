@@ -96,7 +96,7 @@ namespace CoreMVCAPI.Controllers
                                 .Where(s => s.SystemAccount == username)
                                 .Select(s => new
                                 {
-                                    Id = s.Id,
+                                    Id = s.ID,
                                     SystemAccount = s.SystemAccount,
                                     Name = s.Name,  // Assuming `Email` exists in `Staffs`
                                     Position = s.Position  // Mapping role to position
