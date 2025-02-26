@@ -46,6 +46,13 @@ namespace CoreMVCAPI.Controllers
                         positionID = s.PositionID ?? null,
                         DepID = s.DepID ?? null,
                         Name = s.Name ?? "未知",
+                        EName = s.EName ?? "未知",
+                        Marriage = s.Marriage?? false,
+                        IdentityID = s.IdentityID ?? "未知",
+                        BloodType = s.BloodType?? "",
+                        Addr= s.Addr?? "",
+                        MailingAddress = s.MailingAddress ?? "",
+
                         //TakeOfficeDate = s.TakeOfficeDate.HasValue ? s.TakeOfficeDate.Value.ToString("yyyy-MM-dd") : null,
                         SystemAccount = s.SystemAccount ?? "未知",
                         PositionName = s.PositionName ?? "未知",
