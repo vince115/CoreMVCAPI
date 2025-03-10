@@ -73,7 +73,7 @@ namespace CoreMVCAPI.Controllers
                         //FirstDeputyName = s1?.Name ?? "未知",
                         //SecondDeputyID = s2 != null ? s2.Id : 0,
                         //SecondDeputyName = s2?.Name ?? "未知",
-                        ADAccount = s.ADAccount ?? "未知",
+                        AdAccount = s.AdAccount ?? "未知",
                         IsActive = s.IsActive ?? false,
                         TakeOfficeDate = s.TakeOfficeDate != null ? s.TakeOfficeDate.Value.ToString("yyyy-MM-dd") : "未知",
                         Birthday = s.Birthday != null ? s.Birthday.Value.ToString("yyyy-MM-dd") : "未知",
@@ -85,7 +85,7 @@ namespace CoreMVCAPI.Controllers
             
                 // 排序
                 var result = staffs.OrderByDescending(s => s.IsActive)
-                                   .ThenBy(s => s.ADAccount)
+                                   .ThenBy(s => s.AdAccount)
                                    .ThenBy(s => s.Id)
                                    .ToList();
 
@@ -125,7 +125,7 @@ namespace CoreMVCAPI.Controllers
 			var existingStaff = dbo.Staff.FirstOrDefault(s => s.ID == id);
 			if (existingStaff == null) return NotFound();
             		
-			existingStaff.ADAccount = staff.ADAccount;
+			existingStaff.AdAccount = staff.AdAccount;
             existingStaff.Name = staff.Name;
 			existingStaff.PositionName = staff.PositionName;
 			existingStaff.TakeOfficeDate = staff.TakeOfficeDate;

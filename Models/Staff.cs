@@ -114,7 +114,7 @@ namespace CoreMVCAPI.Models
         public string? BankAccount { get; set; }
 
         [StringLength(10)]
-        public string? ADAccount { get; set; }
+        public string? AdAccount { get; set; }
 
         [StringLength(50)]
         public string? PastExp { get; set; }
