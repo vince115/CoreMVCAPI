@@ -197,6 +197,41 @@
         }
       }
     },
+    "/api/salarygrade": {
+      "get": {
+        "tags": [
+          "SalaryGrade"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/salarygrade/{id}": {
+      "get": {
+        "tags": [
+          "SalaryGrade"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/siteinfo": {
       "get": {
         "tags": [
@@ -852,6 +887,12 @@
             "minLength": 0,
             "type": "string"
           },
+          "identityID": {
+            "maxLength": 18,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
           "nickName": {
             "maxLength": 10,
             "minLength": 0,
@@ -985,11 +1026,6 @@
             "format": "date-time",
             "nullable": true
           },
-          "attachment": {
-            "type": "string",
-            "format": "byte",
-            "nullable": true
-          },
           "phoneExt": {
             "maxLength": 5,
             "minLength": 0,
@@ -1022,12 +1058,6 @@
           },
           "bloodType": {
             "maxLength": 5,
-            "minLength": 0,
-            "type": "string",
-            "nullable": true
-          },
-          "identityID": {
-            "maxLength": 18,
             "minLength": 0,
             "type": "string",
             "nullable": true

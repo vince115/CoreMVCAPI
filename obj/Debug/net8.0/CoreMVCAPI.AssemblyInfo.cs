@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("CoreMVCAPI")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+70ebc2e15cffb86fa6f5e8ca5207e21da72eebd6")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+ea41106f25ce14e7b3e131d42d3ee1f516975ec7")]
 [assembly: System.Reflection.AssemblyProductAttribute("CoreMVCAPI")]
 [assembly: System.Reflection.AssemblyTitleAttribute("CoreMVCAPI")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

@@ -125,6 +125,32 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "CoreMVCAPI.Controllers.SalaryGradeController",
+    "Method": "GetAll",
+    "RelativePath": "api/salarygrade",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "CoreMVCAPI.Controllers.SalaryGradeController",
+    "Method": "GetById",
+    "RelativePath": "api/salarygrade/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "CoreMVCAPI.Controllers.SiteInfoController",
     "Method": "GetAll",
     "RelativePath": "api/siteinfo",
@@ -222,7 +248,7 @@
     "Order": 0,
     "Parameters": [
       {
-        "Name": "staff",
+        "Name": "newStaff",
         "Type": "CoreMVCAPI.Models.Staff",
         "IsRequired": true
       }

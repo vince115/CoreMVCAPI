@@ -12,6 +12,7 @@ namespace CoreMVCAPI.Data
         public DbSet<DepartmentInfo> DepartmentInfo { get; set; }
         public DbSet<JobDeputy> JobDeputy { get; set; }
         public DbSet<PositionGrade> PositionGrade { get; set; }
+        public DbSet<SalaryGrade> SalaryGrade { get; set; }
         public DbSet<SiteInfo> SiteInfo { get; set; }
         public DbSet<Staff> Staff { get; set; }
         public DbSet<User> User { get; set; }

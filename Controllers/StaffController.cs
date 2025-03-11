@@ -42,20 +42,19 @@ namespace CoreMVCAPI.Controllers
                     select new
                     {
                         Id = s.ID,
-                        SiteID = s.SiteID ?? null,
-                        positionID = s.PositionID ?? null,
-                        DepID = s.DepID ?? null,
+                        SiteID = s.SiteID, 
+                        PositionID = s.PositionID, 
+                        DepID = s.DepID,  
                         Name = s.Name ?? "未知",
-                        NickName= s.NickName ?? "",
+                        NickName = s.NickName ?? "",
                         EName = s.EName ?? "未知",
-                        Marriage = s.Marriage?? false,
+                        Marriage = s.Marriage,
                         IdentityID = s.IdentityID ?? "未知",
-                        BloodType = s.BloodType?? "",
-                        Addr= s.Addr?? "",
-                        Tel = s.Tel ??"",
+                        BloodType = s.BloodType ?? "",
+                        Addr = s.Addr ?? "",
+                        Tel = s.Tel ?? "",
                         MailingAddress = s.MailingAddress ?? "",
-                        BankAccount = s.BankAccount ??"",
-                        //TakeOfficeDate = s.TakeOfficeDate.HasValue ? s.TakeOfficeDate.Value.ToString("yyyy-MM-dd") : null,
+                        BankAccount = s.BankAccount ?? "",
                         SystemAccount = s.SystemAccount ?? "未知",
                         PositionName = s.PositionName ?? "未知",
                         PositionGradeName = pg.PositionGradeName ?? "未知",
@@ -68,17 +67,14 @@ namespace CoreMVCAPI.Controllers
                         PositionGradeID = s.PositionGradeID ?? 0,
                         PositionLevel = s.PositionLevel ?? 0,
                         SalaryGradeID = s.SalaryGradeID ?? 0,
-                        SalaryGradeLevel = s.SalaryGradeLevel?? 0, 
-                        //FirstDeputyID = s1 != null ? s1.Id : 0,
-                        //FirstDeputyName = s1?.Name ?? "未知",
-                        //SecondDeputyID = s2 != null ? s2.Id : 0,
-                        //SecondDeputyName = s2?.Name ?? "未知",
+                        SalaryGradeLevel = s.SalaryGradeLevel ?? 0,
+
                         AdAccount = s.AdAccount ?? "未知",
-                        IsActive = s.IsActive ?? false,
+                        IsActive = s.IsActive,
                         TakeOfficeDate = s.TakeOfficeDate != null ? s.TakeOfficeDate.Value.ToString("yyyy-MM-dd") : "未知",
                         Birthday = s.Birthday != null ? s.Birthday.Value.ToString("yyyy-MM-dd") : "未知",
 
-                        //Birthday = s.Birthday.HasValue ? s.Birthday.Value.ToString("yyyy-MM-dd") : null
+                    
                     }
                 );
 
@@ -111,15 +107,56 @@ namespace CoreMVCAPI.Controllers
 
 		// 3. 新增 Staff
 		[HttpPost]
-		public IActionResult Create(Staff staff)
-		{
-			dbo.Staff.Add(staff);
-			dbo.SaveChanges();
-			return CreatedAtAction(nameof(GetById), new { id = staff.ID }, staff);
-		}
+        //public IActionResult Create(Staff staff)
+        //{
+        //	dbo.Staff.Add(staff);
+        //	dbo.SaveChanges();
+        //	return CreatedAtAction(nameof(GetById), new { id = staff.ID }, staff);
+        //}
+        [HttpPost]
+      public IActionResult Create([FromBody] Staff newStaff)
+{
+    try
+    {
+        //Console.WriteLine($"📥 新增員工請求: {JsonConvert.SerializeObject(newStaff)}");
 
-		// 4. 更新 Staff
-		[HttpPut("{id}")]
+        if (newStaff == null)
+        {
+            return BadRequest("❌ 提交的員工資料為空!");
+        }
+
+        // **檢查必填欄位**
+        if (string.IsNullOrEmpty(newStaff.Name) || newStaff.SiteID == 0 || newStaff.DepID == 0)
+        {
+            return BadRequest("❌ 必填欄位缺失!");
+        }
+
+        // **檢查 IdentityID 是否唯一**
+        var existingStaff = dbo.Staff.FirstOrDefault(s => s.IdentityID == newStaff.IdentityID);
+        if (existingStaff != null)
+        {
+            return Conflict("❌ 員工已存在!");
+        }
+
+        // **嘗試將員工資料寫入數據庫**
+        dbo.Staff.Add(newStaff);
+        dbo.SaveChanges();
+
+        Console.WriteLine($"✅ 員工 {newStaff.Name} 新增成功");
+
+        return CreatedAtAction(nameof(GetById), new { id = newStaff.ID }, newStaff);
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"❌ 伺服器錯誤: {ex.Message}");
+        return StatusCode(500, $"❌ 內部伺服器錯誤: {ex.Message}");
+    }
+}
+
+
+
+        // 4. 更新 Staff
+        [HttpPut("{id}")]
 		public IActionResult Update(int id, Staff staff)
 		{
 			var existingStaff = dbo.Staff.FirstOrDefault(s => s.ID == id);

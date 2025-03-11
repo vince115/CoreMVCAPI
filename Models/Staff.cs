@@ -6,11 +6,66 @@ namespace CoreMVCAPI.Models
 {
 	public class Staff
 	{
+        internal readonly string? name;
+        internal string? identityID;
+        internal int siteID;
+        internal int depID;
+
         public int ID { get; set; }
+
+        //[StringLength(100)]
+        //public string Name { get; set; }  // ✅ 允許為空
+
+        //[StringLength(50)]
+        //public string? IdentityID { get; set; }  // ✅ 設為可空 (nullable)
+
+        //public int SiteID { get; set; }
+        //public int DepID { get; set; }
+        //public string PositionName { get; set; }
+        //public int PositionID { get; set; }
+        //public int? PositionGradeID { get; set; }
+        //public int? PositionLevel { get; set; }
+        //public int? SalaryGradeID { get; set; }
+        //public int? SalaryGradeLevel { get; set; }
+        //public string DeptName { get; set; }
+        //public string? EName { get; set; }   // ✅ 設為可空
+        //public string? NickName { get; set; }   // ✅ 設為可空
+        //public string? AdAccount { get; set; }
+        //public string? SystemAccount { get; set; }
+        //public string? Addr { get; set; }
+        //public string? MailingAddress { get; set; }
+        //public string? BankAccount { get; set; }
+        //public string? Tel { get; set; }
+        //public string? Phone1 { get; set; }
+        //public string? Phone2 { get; set; }
+        //public string? PhoneExt { get; set; }
+        //public string? OfficialPhone { get; set; }
+        //public string? EMail1 { get; set; }
+        //public string? EMail2 { get; set; }
+        //public string? BloodType { get; set; }
+
+        //[Column(TypeName = "date")]
+        //public DateTime? Birthday { get; set; }
+
+        //[Column(TypeName = "date")]
+        //public DateTime? TakeOfficeDate { get; set; }
+
+        //[Column(TypeName = "date")]
+        //public DateTime? LeaveOfficeDate { get; set; }
+
+        //public bool IsActive { get; set; } = false;
+        //public bool Marriage { get; set; } = false;
+        //public bool IsProjectBonus { get; set; } = false;
+        //public bool IsPerformanceBonus { get; set; } = false;
+
 
         [Required]
         [StringLength(50)]
         public string? Name { get; set; }
+
+        [StringLength(18)]
+        public string? IdentityID { get; set; }
+
 
         [StringLength(10)]
         public string? NickName { get; set; }
@@ -75,7 +130,7 @@ namespace CoreMVCAPI.Models
 
         public DateTime? LogoutTime { get; set; }
 
-        public byte[] Attachment { get; set; }
+        //public byte[] Attachment { get; set; }
 
         [StringLength(5)]
         public string? PhoneExt { get; set; }
@@ -95,8 +150,7 @@ namespace CoreMVCAPI.Models
         [StringLength(5)]
         public string? BloodType { get; set; }
 
-        [StringLength(18)]
-        public string? IdentityID { get; set; }
+
 
         [StringLength(20)]
         public string? EmergencyName { get; set; }
