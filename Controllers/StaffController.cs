@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using CoreMVCAPI.Data;
 using CoreMVCAPI.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace CoreMVCAPI.Controllers
 {
@@ -14,8 +15,9 @@ namespace CoreMVCAPI.Controllers
 
 		public StaffController(ApplicationDbContext context)
 		{
-			dbo = context;
-		}
+			//dbo = context;
+            dbo = context ?? throw new ArgumentNullException(nameof(context));
+        }
 
 
         [HttpGet()]
@@ -45,23 +47,23 @@ namespace CoreMVCAPI.Controllers
                         SiteID = s.SiteID, 
                         PositionID = s.PositionID, 
                         DepID = s.DepID,  
-                        Name = s.Name ?? "未知",
+                        Name = s.Name ?? "無名",
                         NickName = s.NickName ?? "",
-                        EName = s.EName ?? "未知",
+                        EName = s.EName ?? "",
                         Marriage = s.Marriage,
-                        IdentityID = s.IdentityID ?? "未知",
+                        IdentityID = s.IdentityID ?? "",
                         BloodType = s.BloodType ?? "",
                         Addr = s.Addr ?? "",
                         Tel = s.Tel ?? "",
                         MailingAddress = s.MailingAddress ?? "",
                         BankAccount = s.BankAccount ?? "",
-                        SystemAccount = s.SystemAccount ?? "未知",
-                        PositionName = s.PositionName ?? "未知",
-                        PositionGradeName = pg.PositionGradeName ?? "未知",
-                        DeptName = dept.DeptName ?? "未知",
-                        Phone1 = s.Phone1 ?? "未知",
-                        OfficialPhone = s.OfficialPhone ?? "未知",
-                        PhoneExt = s.PhoneExt ?? "未知",
+                        SystemAccount = s.SystemAccount ?? "",
+                        PositionName = s.PositionName ?? "",
+                        PositionGradeName = pg.PositionGradeName ?? "",
+                        DeptName = dept.DeptName ?? "",
+                        Phone1 = s.Phone1 ?? "",
+                        OfficialPhone = s.OfficialPhone ?? "",
+                        PhoneExt = s.PhoneExt ?? "",
                         EMail1 = s.EMail1 ?? "",
                         EMail2 = s.EMail2 ?? "",
                         PositionGradeID = s.PositionGradeID ?? 0,
@@ -69,10 +71,10 @@ namespace CoreMVCAPI.Controllers
                         SalaryGradeID = s.SalaryGradeID ?? 0,
                         SalaryGradeLevel = s.SalaryGradeLevel ?? 0,
 
-                        AdAccount = s.AdAccount ?? "未知",
+                        AdAccount = s.AdAccount ?? "",
                         IsActive = s.IsActive,
-                        TakeOfficeDate = s.TakeOfficeDate != null ? s.TakeOfficeDate.Value.ToString("yyyy-MM-dd") : "未知",
-                        Birthday = s.Birthday != null ? s.Birthday.Value.ToString("yyyy-MM-dd") : "未知",
+                        TakeOfficeDate = s.TakeOfficeDate != null ? s.TakeOfficeDate.Value.ToString("yyyy-MM-dd") : "",
+                        Birthday = s.Birthday != null ? s.Birthday.Value.ToString("yyyy-MM-dd") : "",
 
                     
                     }
@@ -106,7 +108,7 @@ namespace CoreMVCAPI.Controllers
 		}
 
 		// 3. 新增 Staff
-		[HttpPost]
+		//[HttpPost]
         //public IActionResult Create(Staff staff)
         //{
         //	dbo.Staff.Add(staff);
@@ -114,44 +116,74 @@ namespace CoreMVCAPI.Controllers
         //	return CreatedAtAction(nameof(GetById), new { id = staff.ID }, staff);
         //}
         [HttpPost]
-      public IActionResult Create([FromBody] Staff newStaff)
-{
-    try
-    {
-        //Console.WriteLine($"📥 新增員工請求: {JsonConvert.SerializeObject(newStaff)}");
-
-        if (newStaff == null)
+        public IActionResult Create([FromBody] Staff staff)
         {
-            return BadRequest("❌ 提交的員工資料為空!");
+            try
+            {
+                if (staff == null)
+                {
+                    return BadRequest(new { message = "請提供有效的 Staff 資料" });
+                }
+
+                // 將 Staff 物件新增到資料庫
+                dbo.Staff.Add(staff);
+                dbo.SaveChanges();
+
+                // 返回 201 Created，並回傳新增的 Staff 資料
+                return CreatedAtAction(nameof(GetById), new { id = staff.ID }, staff);
+            }
+            catch (DbUpdateException dbEx)
+            {
+                return StatusCode(500, new { message = "新增 Staff 失敗", error = dbEx.InnerException?.Message ?? dbEx.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "未知錯誤", error = ex.Message });
+            }
         }
 
-        // **檢查必填欄位**
-        if (string.IsNullOrEmpty(newStaff.Name) || newStaff.SiteID == 0 || newStaff.DepID == 0)
-        {
-            return BadRequest("❌ 必填欄位缺失!");
-        }
 
-        // **檢查 IdentityID 是否唯一**
-        var existingStaff = dbo.Staff.FirstOrDefault(s => s.IdentityID == newStaff.IdentityID);
-        if (existingStaff != null)
-        {
-            return Conflict("❌ 員工已存在!");
-        }
 
-        // **嘗試將員工資料寫入數據庫**
-        dbo.Staff.Add(newStaff);
-        dbo.SaveChanges();
 
-        Console.WriteLine($"✅ 員工 {newStaff.Name} 新增成功");
+//        [HttpPost]
+//      public IActionResult Create([FromBody] Staff newStaff)
+//{
+//    try
+//    {
+//        //Console.WriteLine($"📥 新增員工請求: {JsonConvert.SerializeObject(newStaff)}");
 
-        return CreatedAtAction(nameof(GetById), new { id = newStaff.ID }, newStaff);
-    }
-    catch (Exception ex)
-    {
-        Console.WriteLine($"❌ 伺服器錯誤: {ex.Message}");
-        return StatusCode(500, $"❌ 內部伺服器錯誤: {ex.Message}");
-    }
-}
+//        if (newStaff == null)
+//        {
+//            return BadRequest("❌ 提交的員工資料為空!");
+//        }
+
+//        // **檢查必填欄位**
+//        if (string.IsNullOrEmpty(newStaff.Name) || newStaff.SiteID == 0 || newStaff.DepID == 0)
+//        {
+//            return BadRequest("❌ 必填欄位缺失!");
+//        }
+
+//        // **檢查 IdentityID 是否唯一**
+//        var existingStaff = dbo.Staff.FirstOrDefault(s => s.IdentityID == newStaff.IdentityID);
+//        if (existingStaff != null)
+//        {
+//            return Conflict("❌ 員工已存在!");
+//        }
+
+//        // **嘗試將員工資料寫入數據庫**
+//        dbo.Staff.Add(newStaff);
+//        dbo.SaveChanges();
+
+//        Console.WriteLine($"✅ 員工 {newStaff.Name} 新增成功");
+
+//        return CreatedAtAction(nameof(GetById), new { id = newStaff.ID }, newStaff);
+//    }
+//    catch (Exception ex)
+//    {
+//        Console.WriteLine($"❌ 伺服器錯誤: {ex.Message}");
+//        return StatusCode(500, $"❌ 內部伺服器錯誤: {ex.Message}");
+//    }
+//}
 
 
 
@@ -161,16 +193,50 @@ namespace CoreMVCAPI.Controllers
 		{
 			var existingStaff = dbo.Staff.FirstOrDefault(s => s.ID == id);
 			if (existingStaff == null) return NotFound();
-            		
-			existingStaff.AdAccount = staff.AdAccount;
+
+            existingStaff.SiteID = staff.SiteID;
+            existingStaff.PositionID = staff.PositionID;
+            existingStaff.DepID = staff.DepID;
             existingStaff.Name = staff.Name;
-			existingStaff.PositionName = staff.PositionName;
-			existingStaff.TakeOfficeDate = staff.TakeOfficeDate;
+            existingStaff.NickName = staff.NickName;
+            existingStaff.EName = staff.EName;
+            existingStaff.IdentityID = staff.IdentityID;
+            existingStaff.BloodType = staff.BloodType;
+            existingStaff.PositionName = staff.PositionName;
+            existingStaff.PositionGradeID = staff.PositionGradeID;
+            existingStaff.PositionLevel = staff.PositionLevel;
+            existingStaff.SalaryGradeID = staff.SalaryGradeID;
+            existingStaff.SalaryGradeLevel = staff.SalaryGradeLevel;
+            existingStaff.Marriage = staff.Marriage;
+            existingStaff.EmergencyName = staff.EmergencyName;
+            existingStaff.EmergencyPhone = staff.EmergencyPhone;
             existingStaff.SystemAccount = staff.SystemAccount;
+            existingStaff.AdAccount = staff.AdAccount;
+            existingStaff.Addr = staff.Addr;
+            existingStaff.MailingAddress = staff.MailingAddress;
+            existingStaff.BankAccount = staff.BankAccount;
+            existingStaff.Tel = staff.Tel;
             existingStaff.Phone1 = staff.Phone1;
             existingStaff.Phone2 = staff.Phone2;
+            existingStaff.OfficialPhone = staff.OfficialPhone;
             existingStaff.PhoneExt = staff.PhoneExt;
-            existingStaff.Birthday = staff.Birthday;
+            existingStaff.EMail1 = staff.EMail1;
+            existingStaff.EMail2 = staff.EMail2;
+            existingStaff.IsActive = staff.IsActive;
+            existingStaff.TakeOfficeDate = staff.TakeOfficeDate;
+
+            if (staff.Birthday.HasValue)
+            {
+                existingStaff.Birthday = staff.Birthday;
+            }
+
+            if (staff.LeaveOfficeDate.HasValue)
+            {
+                existingStaff.LeaveOfficeDate = staff.LeaveOfficeDate;
+            }
+
+            existingStaff.IsProjectBonus = staff.IsProjectBonus;
+            existingStaff.IsPerformanceBonus = staff.IsPerformanceBonus;
 
             dbo.SaveChanges();
 			return NoContent();

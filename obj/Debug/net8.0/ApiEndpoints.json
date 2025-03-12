@@ -248,7 +248,7 @@
     "Order": 0,
     "Parameters": [
       {
-        "Name": "newStaff",
+        "Name": "staff",
         "Type": "CoreMVCAPI.Models.Staff",
         "IsRequired": true
       }
