@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using CoreMVCAPI.Data;
 using CoreMVCAPI.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json;
 
 namespace CoreMVCAPI.Controllers
 {
@@ -108,13 +109,6 @@ namespace CoreMVCAPI.Controllers
 		}
 
 		// 3. 新增 Staff
-		//[HttpPost]
-        //public IActionResult Create(Staff staff)
-        //{
-        //	dbo.Staff.Add(staff);
-        //	dbo.SaveChanges();
-        //	return CreatedAtAction(nameof(GetById), new { id = staff.ID }, staff);
-        //}
         [HttpPost]
         public IActionResult Create([FromBody] Staff staff)
         {
@@ -123,6 +117,12 @@ namespace CoreMVCAPI.Controllers
                 if (staff == null)
                 {
                     return BadRequest(new { message = "請提供有效的 Staff 資料" });
+                }
+
+                // 檢查 `staff` 物件的必填欄位
+                if (string.IsNullOrWhiteSpace(staff.Name) || staff.SiteID == 0 || staff.DepID == 0)
+                {
+                    return BadRequest(new { message = "缺少必要欄位: Name, SiteID, DepID" });
                 }
 
                 // 將 Staff 物件新增到資料庫
@@ -134,7 +134,10 @@ namespace CoreMVCAPI.Controllers
             }
             catch (DbUpdateException dbEx)
             {
-                return StatusCode(500, new { message = "新增 Staff 失敗", error = dbEx.InnerException?.Message ?? dbEx.Message });
+                return StatusCode(500, new {
+                    message = "新增 Staff 失敗", 
+                    error = dbEx.InnerException?.Message ?? dbEx.Message 
+                });
             }
             catch (Exception ex)
             {
@@ -142,104 +145,89 @@ namespace CoreMVCAPI.Controllers
             }
         }
 
-
-
-
-//        [HttpPost]
-//      public IActionResult Create([FromBody] Staff newStaff)
-//{
-//    try
-//    {
-//        //Console.WriteLine($"📥 新增員工請求: {JsonConvert.SerializeObject(newStaff)}");
-
-//        if (newStaff == null)
-//        {
-//            return BadRequest("❌ 提交的員工資料為空!");
-//        }
-
-//        // **檢查必填欄位**
-//        if (string.IsNullOrEmpty(newStaff.Name) || newStaff.SiteID == 0 || newStaff.DepID == 0)
-//        {
-//            return BadRequest("❌ 必填欄位缺失!");
-//        }
-
-//        // **檢查 IdentityID 是否唯一**
-//        var existingStaff = dbo.Staff.FirstOrDefault(s => s.IdentityID == newStaff.IdentityID);
-//        if (existingStaff != null)
-//        {
-//            return Conflict("❌ 員工已存在!");
-//        }
-
-//        // **嘗試將員工資料寫入數據庫**
-//        dbo.Staff.Add(newStaff);
-//        dbo.SaveChanges();
-
-//        Console.WriteLine($"✅ 員工 {newStaff.Name} 新增成功");
-
-//        return CreatedAtAction(nameof(GetById), new { id = newStaff.ID }, newStaff);
-//    }
-//    catch (Exception ex)
-//    {
-//        Console.WriteLine($"❌ 伺服器錯誤: {ex.Message}");
-//        return StatusCode(500, $"❌ 內部伺服器錯誤: {ex.Message}");
-//    }
-//}
-
-
-
         // 4. 更新 Staff
         [HttpPut("{id}")]
-		public IActionResult Update(int id, Staff staff)
-		{
-			var existingStaff = dbo.Staff.FirstOrDefault(s => s.ID == id);
-			if (existingStaff == null) return NotFound();
+        public IActionResult Update(int id, [FromBody] Staff staff)
+        {
+            Console.WriteLine($"📥 收到更新請求 ID: {id}");
+            Console.WriteLine($"📥 收到更新資料: {JsonSerializer.Serialize(staff)}");
 
-            existingStaff.SiteID = staff.SiteID;
-            existingStaff.PositionID = staff.PositionID;
-            existingStaff.DepID = staff.DepID;
-            existingStaff.Name = staff.Name;
-            existingStaff.NickName = staff.NickName;
-            existingStaff.EName = staff.EName;
-            existingStaff.IdentityID = staff.IdentityID;
-            existingStaff.BloodType = staff.BloodType;
-            existingStaff.PositionName = staff.PositionName;
-            existingStaff.PositionGradeID = staff.PositionGradeID;
-            existingStaff.PositionLevel = staff.PositionLevel;
-            existingStaff.SalaryGradeID = staff.SalaryGradeID;
-            existingStaff.SalaryGradeLevel = staff.SalaryGradeLevel;
-            existingStaff.Marriage = staff.Marriage;
-            existingStaff.EmergencyName = staff.EmergencyName;
-            existingStaff.EmergencyPhone = staff.EmergencyPhone;
-            existingStaff.SystemAccount = staff.SystemAccount;
-            existingStaff.AdAccount = staff.AdAccount;
-            existingStaff.Addr = staff.Addr;
-            existingStaff.MailingAddress = staff.MailingAddress;
-            existingStaff.BankAccount = staff.BankAccount;
-            existingStaff.Tel = staff.Tel;
-            existingStaff.Phone1 = staff.Phone1;
-            existingStaff.Phone2 = staff.Phone2;
-            existingStaff.OfficialPhone = staff.OfficialPhone;
-            existingStaff.PhoneExt = staff.PhoneExt;
-            existingStaff.EMail1 = staff.EMail1;
-            existingStaff.EMail2 = staff.EMail2;
-            existingStaff.IsActive = staff.IsActive;
-            existingStaff.TakeOfficeDate = staff.TakeOfficeDate;
-
-            if (staff.Birthday.HasValue)
+            if (staff == null)
             {
-                existingStaff.Birthday = staff.Birthday;
+                Console.WriteLine("❌ `staff` 物件為空，回傳 400 Bad Request");
+                return BadRequest("請求體中的 `staff` 物件為空");
             }
 
-            if (staff.LeaveOfficeDate.HasValue)
+            var existingStaff = dbo.Staff.FirstOrDefault(s => s.ID == id);
+            if (existingStaff == null)
             {
-                existingStaff.LeaveOfficeDate = staff.LeaveOfficeDate;
+                return NotFound(new { message = $"找不到 ID 為 {id} 的 Staff" });
             }
 
-            existingStaff.IsProjectBonus = staff.IsProjectBonus;
-            existingStaff.IsPerformanceBonus = staff.IsPerformanceBonus;
+            try
+            {
+                // ✅ 更新所有欄位
+                existingStaff.SiteID = staff.SiteID;
+                existingStaff.PositionID = staff.PositionID;
+                existingStaff.DepID = staff.DepID;
+                existingStaff.Name = staff.Name;
+                existingStaff.NickName = staff.NickName;
+                existingStaff.EName = staff.EName;
+                existingStaff.IdentityID = staff.IdentityID;
+                existingStaff.BloodType = staff.BloodType;
+                existingStaff.PositionName = staff.PositionName;
+                existingStaff.PositionGradeID = staff.PositionGradeID;
+                existingStaff.PositionLevel = staff.PositionLevel;
+                existingStaff.SalaryGradeID = staff.SalaryGradeID;
+                existingStaff.SalaryGradeLevel = staff.SalaryGradeLevel;
+                existingStaff.Marriage = staff.Marriage;
+                existingStaff.EmergencyName = staff.EmergencyName;
+                existingStaff.EmergencyPhone = staff.EmergencyPhone;
+                existingStaff.SystemAccount = staff.SystemAccount;
+                existingStaff.AdAccount = staff.AdAccount;
+                existingStaff.Addr = staff.Addr;
+                existingStaff.MailingAddress = staff.MailingAddress;
+                existingStaff.BankAccount = staff.BankAccount;
+                existingStaff.Tel = staff.Tel;
+                existingStaff.Phone1 = staff.Phone1;
+                existingStaff.Phone2 = staff.Phone2;
+                existingStaff.OfficialPhone = staff.OfficialPhone;
+                existingStaff.PhoneExt = staff.PhoneExt;
+                existingStaff.EMail1 = staff.EMail1;
+                existingStaff.EMail2 = staff.EMail2;
+                existingStaff.IsActive = staff.IsActive;
+                existingStaff.TakeOfficeDate = staff.TakeOfficeDate;
 
-            dbo.SaveChanges();
-			return NoContent();
+                // ✅ 避免 NULL 值覆蓋原本資料
+                if (staff.Birthday.HasValue)
+                {
+                    existingStaff.Birthday = staff.Birthday;
+                }
+
+                if (staff.LeaveOfficeDate.HasValue)
+                {
+                    existingStaff.LeaveOfficeDate = staff.LeaveOfficeDate;
+                }
+
+                existingStaff.IsProjectBonus = staff.IsProjectBonus;
+                existingStaff.IsPerformanceBonus = staff.IsPerformanceBonus;
+
+                dbo.SaveChanges();
+                return Ok(new { message = "更新成功", updatedStaff = existingStaff });
+            }
+            catch (DbUpdateException dbEx)
+            {
+                return StatusCode(500, new
+                {
+                    message = "更新失敗",
+                    error = dbEx.InnerException?.Message ?? dbEx.Message
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "未知錯誤", error = ex.Message });
+            }
+            
 		}
 
 		// 5. 刪除 Staff
